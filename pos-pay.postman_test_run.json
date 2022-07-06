@@ -1,0 +1,356 @@
+{
+	"id": "0f6c38b5-cf59-43c1-b3e2-0db8730cb031",
+	"name": "pos-pay",
+	"timestamp": "2022-04-06T05:51:07.329Z",
+	"collection_id": "17892529-8705250b-3a69-409a-b42e-53bb077e8fe0",
+	"folder_id": 0,
+	"environment_id": "b5180f74-93b1-4040-9a74-7b54febbced9",
+	"totalPass": 23,
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "3491b64d-495b-4b35-94c5-a748cc00ff67",
+			"name": "GetPackages",
+			"url": "http://k8s-common-traefik.pool.gittigidiyor.net:8080/user-feature-aggregation/advertisement/package?packageStatus=ACTIVE&packageType=MABAYA",
+			"time": 140,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Body contains advertisement package id": true,
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Body contains advertisement package id": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				140
+			],
+			"allTests": [
+				{
+					"Body contains advertisement package id": true,
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "00c7bb3f-2f0d-4744-9bd6-3ce136d78603",
+			"name": "Pos/YKB",
+			"url": "http://k8s-common-traefik.pool.gittigidiyor.net:8080/user-feature-aggregation/advertisement/mabaya/9717156/6239addd0b05190001f7b42a/payment",
+			"time": 1643,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Is the payment successfull?  ": true,
+				"Body contains order id": true,
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Is the payment successfull?  ": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Body contains order id": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				1643
+			],
+			"allTests": [
+				{
+					"Is the payment successfull?  ": true,
+					"Body contains order id": true,
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "97ac8f94-05ed-4603-840f-dcc6d08ed858",
+			"name": "Pos/Akbank",
+			"url": "http://k8s-common-traefik.pool.gittigidiyor.net:8080/user-feature-aggregation/advertisement/mabaya/9717156/6239addd0b05190001f7b42a/payment",
+			"time": 1415,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Is the payment successfull?  ": true,
+				"Body contains order id": true,
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Is the payment successfull?  ": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Body contains order id": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				1415
+			],
+			"allTests": [
+				{
+					"Is the payment successfull?  ": true,
+					"Body contains order id": true,
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "9f5aa496-81ff-4a7e-9bda-ca252758271b",
+			"name": "Pos/İşbank",
+			"url": "http://k8s-common-traefik.pool.gittigidiyor.net:8080/user-feature-aggregation/advertisement/mabaya/9717156/6239addd0b05190001f7b42a/payment",
+			"time": 1096,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Is the payment successfull?  ": true,
+				"Body contains order id": true,
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Is the payment successfull?  ": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Body contains order id": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				1096
+			],
+			"allTests": [
+				{
+					"Is the payment successfull?  ": true,
+					"Body contains order id": true,
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "408a1c22-7ada-47d5-8623-37ce3dee020b",
+			"name": "Pos/Ziraatbank",
+			"url": "http://k8s-common-traefik.pool.gittigidiyor.net:8080/user-feature-aggregation/advertisement/mabaya/9717156/6239addd0b05190001f7b42a/payment",
+			"time": 1186,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Is the payment successfull?  ": true,
+				"Body contains order id": true,
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Is the payment successfull?  ": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Body contains order id": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				1186
+			],
+			"allTests": [
+				{
+					"Is the payment successfull?  ": true,
+					"Body contains order id": true,
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "c3e330c5-06ff-4cfc-b16e-29ef867dc7dc",
+			"name": "Pos/Finansbank",
+			"url": "http://k8s-common-traefik.pool.gittigidiyor.net:8080/user-feature-aggregation/advertisement/mabaya/9717156/6239addd0b05190001f7b42a/payment",
+			"time": 708,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Is the payment successfull?  ": true,
+				"Body contains order id": true,
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Is the payment successfull?  ": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Body contains order id": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				708
+			],
+			"allTests": [
+				{
+					"Is the payment successfull?  ": true,
+					"Body contains order id": true,
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "0adbcc16-9224-4c92-bee6-7bc930ebcbbb",
+			"name": "Pos/Garantibank",
+			"url": "http://k8s-common-traefik.pool.gittigidiyor.net:8080/user-feature-aggregation/advertisement/mabaya/9717156/6239addd0b05190001f7b42a/payment",
+			"time": 775,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Is the payment successfull?  ": true,
+				"Body contains order id": true,
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Is the payment successfull?  ": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Body contains order id": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				775
+			],
+			"allTests": [
+				{
+					"Is the payment successfull?  ": true,
+					"Body contains order id": true,
+					"Status code is 200": true
+				}
+			]
+		},
+		{
+			"id": "7f605c9d-8ac5-4967-97ad-811202e4fec7",
+			"name": "Pos/American",
+			"url": "http://k8s-common-traefik.pool.gittigidiyor.net:8080/user-feature-aggregation/advertisement/mabaya/9717156/6239addd0b05190001f7b42a/payment",
+			"time": 903,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Is the payment successfull?  ": true,
+				"Body contains order id": true,
+				"Status code is 200": true
+			},
+			"testPassFailCounts": {
+				"Is the payment successfull?  ": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Body contains order id": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				903
+			],
+			"allTests": [
+				{
+					"Is the payment successfull?  ": true,
+					"Body contains order id": true,
+					"Status code is 200": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 7866,
+	"collection": {
+		"requests": [
+			{
+				"id": "3491b64d-495b-4b35-94c5-a748cc00ff67",
+				"method": "GET"
+			},
+			{
+				"id": "00c7bb3f-2f0d-4744-9bd6-3ce136d78603",
+				"method": "POST"
+			},
+			{
+				"id": "97ac8f94-05ed-4603-840f-dcc6d08ed858",
+				"method": "POST"
+			},
+			{
+				"id": "9f5aa496-81ff-4a7e-9bda-ca252758271b",
+				"method": "POST"
+			},
+			{
+				"id": "408a1c22-7ada-47d5-8623-37ce3dee020b",
+				"method": "POST"
+			},
+			{
+				"id": "c3e330c5-06ff-4cfc-b16e-29ef867dc7dc",
+				"method": "POST"
+			},
+			{
+				"id": "0adbcc16-9224-4c92-bee6-7bc930ebcbbb",
+				"method": "POST"
+			},
+			{
+				"id": "7f605c9d-8ac5-4967-97ad-811202e4fec7",
+				"method": "POST"
+			}
+		]
+	}
+}

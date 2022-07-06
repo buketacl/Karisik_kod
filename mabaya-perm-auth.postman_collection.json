@@ -1,0 +1,129 @@
+{
+	"info": {
+		"_postman_id": "20bf3d50-d74f-46ef-b7de-3ebf6ce8cbde",
+		"name": "mabaya-perm/auth",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getUserPermissions",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const rsp = pm.response.json();",
+							"pm.test(\"Page view permission?  \", () => {",
+							"    pm.expect(rsp.data.permissions[0].value).to.eql(true);",
+							"    console.log(\"Response:\" + rsp.data.permissions[0].name +\" --> \"+ rsp.data.permissions[0].value);",
+							"});",
+							"pm.test(\"Dashboard view permission?  \", () => {",
+							"    pm.expect(rsp.data.permissions[1].value).to.eql(true);",
+							"console.log(\"Response:\" + rsp.data.permissions[1].name +\" --> \"+ rsp.data.permissions[1].value);",
+							"});",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{user-feature-aggregation}}/user-feature-aggregation/advertisement/mabaya/{{VALID_SELLER_ID_TO_MABAYA}}/permission",
+					"host": [
+						"{{user-feature-aggregation}}"
+					],
+					"path": [
+						"user-feature-aggregation",
+						"advertisement",
+						"mabaya",
+						"{{VALID_SELLER_ID_TO_MABAYA}}",
+						"permission"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "isAuthenticate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const rsp = pm.response.json();",
+							"pm.test(\"If authentication is successful?  \", () => {",
+							"    pm.expect(rsp.error).to.eql(null);",
+							"    console.log(\"Token:\" + rsp.data.token );",
+							"});",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{user-feature-aggregation}}/user-feature-aggregation/mabaya/960459/token",
+					"host": [
+						"{{user-feature-aggregation}}"
+					],
+					"path": [
+						"user-feature-aggregation",
+						"mabaya",
+						"960459",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "isNotAuthenticate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const rsp = pm.response.json();",
+							"pm.test(\"If authentication is not successful?  \", () => {",
+							"    pm.expect(rsp.error.description).to.eql(\"authentication failed\");",
+							"    console.log(\"Token:\" + rsp.error.description);",
+							"});",
+							"pm.test(\"Status code is 409\", function () {",
+							"    pm.response.to.have.status(409);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{user-feature-aggregation}}/user-feature-aggregation/mabaya/{{INVALID_SELLER_ID_TO_MABAYA}}/token",
+					"host": [
+						"{{user-feature-aggregation}}"
+					],
+					"path": [
+						"user-feature-aggregation",
+						"mabaya",
+						"{{INVALID_SELLER_ID_TO_MABAYA}}",
+						"token"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

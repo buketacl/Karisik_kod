@@ -1,0 +1,548 @@
+{
+	"info": {
+		"_postman_id": "d1c861df-4f71-453e-8d8a-58e1aff528c4",
+		"name": "mabaya",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CreatePackage",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const rsp = pm.response.json();",
+							"pm.environment.set(\"ENV_ADVERTISEMENT_PACKAGE_ID\", rsp.data.advertisementPackageId);",
+							"console.log(\"created advertisementPackageId :\" + rsp.data.advertisementPackageId);",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"amount\": 500,\n  \"description\": \"Servis Otomasyonu Post\",\n  \"packageAmount\": 500,\n  \"packageName\": \"Otomasyon Datası\",\n  \"packageStatus\": \"ACTIVE\",\n  \"packageType\": \"MABAYA\",\n  \"taxAmount\": 90,\n  \"taxRate\": 18\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{user-feature-aggregation}}/user-feature-aggregation/advertisement/package",
+					"host": [
+						"{{user-feature-aggregation}}"
+					],
+					"path": [
+						"user-feature-aggregation",
+						"advertisement",
+						"package"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetPackage",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var rsp = pm.response.json();",
+							"//Yanıt gövdesinin bir dize içerip içermediğini test edin:",
+							"pm.test(\"Does the body contains the price?\",() => {",
+							"  pm.expect(pm.response.text()).to.include(\"price\");",
+							"});",
+							"pm.test(\"The price and status in the package. \", () => {",
+							"  pm.expect(rsp.data.price).to.eql(590);",
+							"  console.log(\"price :\" + rsp.data.price);",
+							"  pm.expect(rsp.data.packageStatus).to.eql(\"ACTIVE\");",
+							"  console.log(\"status :\" + rsp.data.packageStatus);",
+							"});",
+							"if(rsp.data.advertisementPackageId==(pm.environment.get(\"advertisementPackageIdEnv\"))){",
+							"pm.test(\"This advertisement package id is correct. \");",
+							"console.log(\"advertisement package id :\" + rsp.data.advertisementPackageId); ",
+							"}",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{user-feature-aggregation}}/user-feature-aggregation/advertisement/package/{{ENV_ADVERTISEMENT_PACKAGE_ID}}",
+					"host": [
+						"{{user-feature-aggregation}}"
+					],
+					"path": [
+						"user-feature-aggregation",
+						"advertisement",
+						"package",
+						"{{ENV_ADVERTISEMENT_PACKAGE_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pos/YKB",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const rsp = pm.response.json();",
+							"pm.test(\"Is the payment successfull?  \", () => {",
+							"  pm.expect(rsp.data.paymentStatus).to.eql(\"PAYMENT_SUCCESSFUL\");",
+							"  console.log(\"payment result with ykb-> paymentStatus :\" + rsp.data.paymentStatus);});",
+							"pm.test(\"Body contains order id\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"orderId\");",
+							"    console.log(\"orderId :\" + rsp.data.orderId)});",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"clientIp\": \"127.0.0.1\",\n  \"creditCard\": {\n    \"cardHolderName\": \"servis testi ykb\",\n    \"cardNumber\": \"4921309181710370\",\n    \"cvv\": \"931\",\n    \"expireMonth\": \"01\",\n    \"expireYear\": \"23\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{user-feature-aggregation}}/user-feature-aggregation/advertisement/mabaya/{{VALID_SELLER_ID_TO_MABAYA}}/{{ENV_ADVERTISEMENT_PACKAGE_ID}}/payment",
+					"host": [
+						"{{user-feature-aggregation}}"
+					],
+					"path": [
+						"user-feature-aggregation",
+						"advertisement",
+						"mabaya",
+						"{{VALID_SELLER_ID_TO_MABAYA}}",
+						"{{ENV_ADVERTISEMENT_PACKAGE_ID}}",
+						"payment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pos/Akbank",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const rsp = pm.response.json();",
+							"pm.test(\"Is the payment successfull?  \", () => {",
+							"  pm.expect(rsp.data.paymentStatus).to.eql(\"PAYMENT_SUCCESSFUL\");",
+							"  console.log(\"payment result with akbank-> paymentStatus :\" + rsp.data.paymentStatus);});",
+							"pm.test(\"Body contains order id\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"orderId\");",
+							"    console.log(\"orderId :\" + rsp.data.orderId)});",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"clientIp\": \"127.0.0.1\",\n  \"creditCard\": {\n    \"cardHolderName\": \"servis testi akbankvisa\",\n    \"cardNumber\": \"4355084355084358\",\n    \"cvv\": \"000\",\n    \"expireMonth\": \"12\",\n    \"expireYear\": \"26\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{user-feature-aggregation}}/user-feature-aggregation/advertisement/mabaya/{{VALID_SELLER_ID_TO_MABAYA}}/{{ENV_ADVERTISEMENT_PACKAGE_ID}}/payment",
+					"host": [
+						"{{user-feature-aggregation}}"
+					],
+					"path": [
+						"user-feature-aggregation",
+						"advertisement",
+						"mabaya",
+						"{{VALID_SELLER_ID_TO_MABAYA}}",
+						"{{ENV_ADVERTISEMENT_PACKAGE_ID}}",
+						"payment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pos/Ziraatbank",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const rsp = pm.response.json();",
+							"pm.test(\"Is the payment successfull?  \", () => {",
+							"  pm.expect(rsp.data.paymentStatus).to.eql(\"PAYMENT_SUCCESSFUL\");",
+							"  console.log(\"payment result with ziraat-> paymentStatus :\" + rsp.data.paymentStatus);});",
+							"pm.test(\"Body contains order id\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"orderId\");",
+							"    console.log(\"orderId :\" + rsp.data.orderId)});",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"clientIp\": \"127.0.0.1\",\n  \"creditCard\": {\n    \"cardHolderName\": \"servis testi ziraat\",\n    \"cardNumber\": \"4546711234567894\",\n    \"cvv\": \"000\",\n    \"expireMonth\": \"12\",\n    \"expireYear\": \"26\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{user-feature-aggregation}}/user-feature-aggregation/advertisement/mabaya/{{VALID_SELLER_ID_TO_MABAYA}}/{{ENV_ADVERTISEMENT_PACKAGE_ID}}/payment",
+					"host": [
+						"{{user-feature-aggregation}}"
+					],
+					"path": [
+						"user-feature-aggregation",
+						"advertisement",
+						"mabaya",
+						"{{VALID_SELLER_ID_TO_MABAYA}}",
+						"{{ENV_ADVERTISEMENT_PACKAGE_ID}}",
+						"payment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pos/İşbank",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const rsp = pm.response.json();",
+							"pm.test(\"Is the payment successfull?  \", () => {",
+							"  pm.expect(rsp.data.paymentStatus).to.eql(\"PAYMENT_SUCCESSFUL\");",
+							"  console.log(\"payment result with isbank-> paymentStatus :\" + rsp.data.paymentStatus);});",
+							"pm.test(\"Body contains order id\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"orderId\");",
+							"    console.log(\"orderId :\" + rsp.data.orderId)});",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"clientIp\": \"127.0.0.1\",\n  \"creditCard\": {\n    \"cardHolderName\": \"servis testi işbank\",\n    \"cardNumber\": \"5406675406675403\",\n    \"cvv\": \"000\",\n    \"expireMonth\": \"12\",\n    \"expireYear\": \"26\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{user-feature-aggregation}}/user-feature-aggregation/advertisement/mabaya/{{VALID_SELLER_ID_TO_MABAYA}}/{{ENV_ADVERTISEMENT_PACKAGE_ID}}/payment",
+					"host": [
+						"{{user-feature-aggregation}}"
+					],
+					"path": [
+						"user-feature-aggregation",
+						"advertisement",
+						"mabaya",
+						"{{VALID_SELLER_ID_TO_MABAYA}}",
+						"{{ENV_ADVERTISEMENT_PACKAGE_ID}}",
+						"payment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pos/Finansbank",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const rsp = pm.response.json();",
+							"pm.test(\"Is the payment successfull?  \", () => {",
+							"  pm.expect(rsp.data.paymentStatus).to.eql(\"PAYMENT_SUCCESSFUL\");",
+							"  console.log(\"payment result with qnb-> paymentStatus :\" + rsp.data.paymentStatus);});",
+							"pm.test(\"Body contains order id\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"orderId\");",
+							"    console.log(\"orderId :\" + rsp.data.orderId)});",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"clientIp\": \"127.0.0.1\",\n  \"creditCard\": {\n    \"cardHolderName\": \"servis testi finans\",\n    \"cardNumber\": \"5456165456165454\",\n    \"cvv\": \"656\",\n    \"expireMonth\": \"12\",\n    \"expireYear\": \"25\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{user-feature-aggregation}}/user-feature-aggregation/advertisement/mabaya/{{VALID_SELLER_ID_TO_MABAYA}}/{{ENV_ADVERTISEMENT_PACKAGE_ID}}/payment",
+					"host": [
+						"{{user-feature-aggregation}}"
+					],
+					"path": [
+						"user-feature-aggregation",
+						"advertisement",
+						"mabaya",
+						"{{VALID_SELLER_ID_TO_MABAYA}}",
+						"{{ENV_ADVERTISEMENT_PACKAGE_ID}}",
+						"payment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pos/Garantibank",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const rsp = pm.response.json();",
+							"pm.test(\"Is the payment successfull?  \", () => {",
+							"  pm.expect(rsp.data.paymentStatus).to.eql(\"PAYMENT_SUCCESSFUL\");",
+							"  console.log(\"payment result with garanti-> paymentStatus :\" + rsp.data.paymentStatus);});",
+							"pm.test(\"Body contains order id\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"orderId\");",
+							"    console.log(\"orderId :\" + rsp.data.orderId)});",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"clientIp\": \"127.0.0.1\",\n  \"creditCard\": {\n    \"cardHolderName\": \"servis testi garanti\",\n    \"cardNumber\": \"4282209004348015\",\n    \"cvv\": \"123\",\n    \"expireMonth\": \"08\",\n    \"expireYear\": \"22\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{user-feature-aggregation}}/user-feature-aggregation/advertisement/mabaya/{{VALID_SELLER_ID_TO_MABAYA}}/{{ENV_ADVERTISEMENT_PACKAGE_ID}}/payment",
+					"host": [
+						"{{user-feature-aggregation}}"
+					],
+					"path": [
+						"user-feature-aggregation",
+						"advertisement",
+						"mabaya",
+						"{{VALID_SELLER_ID_TO_MABAYA}}",
+						"{{ENV_ADVERTISEMENT_PACKAGE_ID}}",
+						"payment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pos/American",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const rsp = pm.response.json();",
+							"pm.test(\"Is the payment successfull?  \", () => {",
+							"  pm.expect(rsp.data.paymentStatus).to.eql(\"PAYMENT_SUCCESSFUL\");",
+							"  console.log(\"payment result with american express-> paymentStatus :\" + rsp.data.paymentStatus);});",
+							"pm.test(\"Body contains order id\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"orderId\");",
+							"    console.log(\"orderId :\" + rsp.data.orderId)});",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"clientIp\": \"127.0.0.1\",\n  \"creditCard\": {\n    \"cardHolderName\": \"servis testi american\",\n    \"cardNumber\": \"375622005485014\",\n    \"cvv\": \"0123\",\n    \"expireMonth\": \"10\",\n    \"expireYear\": \"22\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{user-feature-aggregation}}/user-feature-aggregation/advertisement/mabaya/{{VALID_SELLER_ID_TO_MABAYA}}/{{ENV_ADVERTISEMENT_PACKAGE_ID}}/payment",
+					"host": [
+						"{{user-feature-aggregation}}"
+					],
+					"path": [
+						"user-feature-aggregation",
+						"advertisement",
+						"mabaya",
+						"{{VALID_SELLER_ID_TO_MABAYA}}",
+						"{{ENV_ADVERTISEMENT_PACKAGE_ID}}",
+						"payment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PutPackage",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Updated description and status in the package\", () => {",
+							"  var rsp = pm.response.json();",
+							"  pm.expect(rsp.data.description).to.eql(\"Servis Otomasyonu Put\");",
+							"  console.log(\"description :\" + rsp.data.description);",
+							"  pm.expect(rsp.data.packageStatus).to.eql(\"PASSIVE\");",
+							"  console.log(\"status :\" + rsp.data.packageStatus);",
+							"});",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"amount\": 500,\n  \"description\": \"Servis Otomasyonu Put\",\n  \"packageAmount\": 500,\n  \"packageName\": \"Otomasyon Datası\",\n  \"packageStatus\": \"PASSIVE\",\n  \"packageType\": \"MABAYA\",\n  \"taxAmount\": 90,\n  \"taxRate\": 18\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{user-feature-aggregation}}/user-feature-aggregation/advertisement/package/{{ENV_ADVERTISEMENT_PACKAGE_ID}}",
+					"host": [
+						"{{user-feature-aggregation}}"
+					],
+					"path": [
+						"user-feature-aggregation",
+						"advertisement",
+						"package",
+						"{{ENV_ADVERTISEMENT_PACKAGE_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DelPackage",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"deleted package\", () => {",
+							"  var rsp = pm.response.json();",
+							"  console.log(\"deleted package :\" + rsp.data.advertisementPackageId);",
+							"});",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{user-feature-aggregation}}/user-feature-aggregation/advertisement/package/{{ENV_ADVERTISEMENT_PACKAGE_ID}}",
+					"host": [
+						"{{user-feature-aggregation}}"
+					],
+					"path": [
+						"user-feature-aggregation",
+						"advertisement",
+						"package",
+						"{{ENV_ADVERTISEMENT_PACKAGE_ID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,564 @@
+{
+	"info": {
+		"_postman_id": "b1d274e5-dda8-440b-9709-407ae5a17a07",
+		"name": "shipping-control-newman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "sale-info-combined",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"var sId_combined = _.map(jsonData.data.types, (element) => {",
+							"    return element.id;",
+							"})",
+							"",
+							"pm.environment.set(\"sId-combined\", sId_combined);",
+							"pm.test(\"status test\", function(){",
+							"    return pm.expect(jsonData.data.types[0].status).to.equal(3);",
+							"});",
+							"console.log(\"status: GT\"+ jsonData.data.types[0].status);",
+							"",
+							"postman.setNextRequest(\"integrated-shipping\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{sale-aggregation-pool}}/sale-aggregation/sale?page=1&limit=10&saleCode={{sc-combined}}",
+					"host": [
+						"{{sale-aggregation-pool}}"
+					],
+					"path": [
+						"sale-aggregation",
+						"sale"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "limit",
+							"value": "10"
+						},
+						{
+							"key": "saleCode",
+							"value": "{{sc-combined}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "integrated-shipping",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"var shippingFirms = JSON.parse(pm.environment.get(\"shippingFirms\"));",
+							"",
+							"pm.environment.set(\"shippingFeePayer\", jsonData.data.types[0].shippingFeePayer);",
+							"pm.environment.set(\"stateType\", jsonData.data.types[0].stateType);",
+							"pm.environment.set(\"shippingFirmId\", jsonData.data.types[0].shippingFirmId);",
+							"",
+							"pm.test(\"shippingFeePayer test\", function (){",
+							"    return pm.expect(jsonData.data.types[0].shippingFeePayer).to.equal(\"SELLER\");",
+							"})",
+							"",
+							"pm.test(\"stateType test\", function (){",
+							"    return pm.expect(jsonData.data.types[0].stateType).to.equal(\"REQUESTED\");",
+							"})",
+							"",
+							"console.log(shippingFirms[jsonData.data.types[0].shippingFirmId].shippingFirm +\": \"+ jsonData.data.types[0].stateType);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{shipping-api-aggregation}}/shipping-api-aggregation/sale/shipping/integrated-shipping?limit=10&page=1&saleIds={{sId-combined}}",
+					"host": [
+						"{{shipping-api-aggregation}}"
+					],
+					"path": [
+						"shipping-api-aggregation",
+						"sale",
+						"shipping",
+						"integrated-shipping"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "10"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "saleIds",
+							"value": "{{sId-combined}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "shipping-request-combined",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"var sId_combined = _.map(jsonData.data.types, (element) => {",
+							"    return element.id;",
+							"})",
+							"var count=0;",
+							"",
+							"console.log(jsonData.data.types.length)",
+							"pm.test(\"Shipping Request Type Test\", function(){",
+							"",
+							"    for(var i=0; i < jsonData.data.types.length ; i++){",
+							"        console.log(i+1 +\". request status: \"+ jsonData.data.types[i].shippingRequestType);",
+							"",
+							"    if(pm.expect(jsonData.data.types[i].shippingRequestType).to.equal(\"CREATE\") )",
+							"      count += 1;",
+							"}",
+							"",
+							"  return pm.expect(jsonData.data.types.length).to.equal(count);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"saleIds\": [\n    {{sId-combined}}\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{shipping-api-aggregation}}/shipping-api-aggregation/shipping/shipping-request/list",
+					"host": [
+						"{{shipping-api-aggregation}}"
+					],
+					"path": [
+						"shipping-api-aggregation",
+						"shipping",
+						"shipping-request",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sale-info",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.environment.set(\"sc\", jsonData.data.types[0].saleCode);",
+							"pm.environment.set(\"sId\", jsonData.data.types[0].id);",
+							"pm.environment.set(\"sellerId\",jsonData.data.types[0].sellerId);",
+							"pm.environment.set(\"buyerId\",jsonData.data.types[0].buyerId);",
+							"pm.test(\"Status test\", function () {",
+							"      return  pm.expect(jsonData.data.types[0].status).to.equal(3);",
+							"});",
+							"console.log(\"GT\"+ jsonData.data.types[0].status);",
+							"if(jsonData.data.types[0].status == 3){",
+							"    console.log(\"SUCCESS\");",
+							"}",
+							"",
+							"postman.setNextRequest(\"create-shipment-v1\");",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{sale-aggregation-pool}}/sale-aggregation/sale?page=1&limit=1&saleCode={{sc}}",
+					"host": [
+						"{{sale-aggregation-pool}}"
+					],
+					"path": [
+						"sale-aggregation",
+						"sale"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "limit",
+							"value": "1"
+						},
+						{
+							"key": "saleCode",
+							"value": "{{sc}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create-shipment-v1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody)",
+							"",
+							"pm.test(\"Create Shipment v1 Test\", function(){",
+							"    return pm.expect(jsonData.data.saleCode).to.equal(pm.environment.get(\"sc\"));",
+							"})",
+							"",
+							"console.log(\"createShipment: \"+ pm.environment.get(\"shippingFirmId\"));",
+							"console.log(jsonData.data.saleCode);",
+							"",
+							"postman.setNextRequest(\"shipping-request\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"shippingFeePayer\": \"{{shippingFeePayer}}\",\n  \"shippingFirmId\": {{shippingFirmId}},\n  \"userId\": {{sellerId}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sale-aggregation-pool}}/sale-aggregation/sale/{{sId}}/shipping/shipment",
+					"host": [
+						"{{sale-aggregation-pool}}"
+					],
+					"path": [
+						"sale-aggregation",
+						"sale",
+						"{{sId}}",
+						"shipping",
+						"shipment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "shipping-request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"console.log(\"request-status: \" + jsonData.data.shippingRequestType);",
+							"pm.test(\"Shipping Request Type Test\", function(){",
+							"   return pm.expect(jsonData.data.shippingRequestType).to.equal(\"CREATE\");",
+							"})",
+							"postman.setNextRequest(\"integrated-shipping-status\");",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{shipping-api-aggregation}}/shipping-api-aggregation/shipping/shipping-request?saleId={{sId}}",
+					"host": [
+						"{{shipping-api-aggregation}}"
+					],
+					"path": [
+						"shipping-api-aggregation",
+						"shipping",
+						"shipping-request"
+					],
+					"query": [
+						{
+							"key": "saleId",
+							"value": "{{sId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "integrated-shipping-status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"var shippingFirms = JSON.parse(pm.environment.get(\"shippingFirms\"));",
+							"",
+							"pm.environment.set(\"shippingFeePayer\",jsonData.data.types[0].shippingFeePayer);",
+							"pm.environment.set(\"shippingFirmId\", jsonData.data.types[0].shippingFirmId);",
+							"",
+							"console.log( jsonData.data.types[0].shippingFeePayer);",
+							"console.log( jsonData.data.types[0].shippingFirmId);",
+							"",
+							"pm.test(\"shippingFeePayer test\", function () {",
+							"  return  pm.expect(jsonData.data.types[0].shippingFeePayer).to.equal(\"SELLER\");",
+							"});",
+							"",
+							"console.log(shippingFirms[jsonData.data.types[0].shippingFirmId].shippingFirm +\": \"+ jsonData.data.types[0].stateType);",
+							"",
+							"postman.setNextRequest(\"cancel-shipment\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{shipping-api-aggregation}}/shipping-api-aggregation/sale/shipping/integrated-shipping-status?limit=10&page=1&saleId={{sId}}",
+					"host": [
+						"{{shipping-api-aggregation}}"
+					],
+					"path": [
+						"shipping-api-aggregation",
+						"sale",
+						"shipping",
+						"integrated-shipping-status"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "10"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "saleId",
+							"value": "{{sId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cancel-shipment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody)",
+							"",
+							"pm.test(\"Cancel Shipment Test\", function(){",
+							"    return pm.expect(jsonData.data.saleCode).to.equal(pm.environment.get(\"sc\"));",
+							"})",
+							"",
+							"console.log(\"cancelShipment: \"+ pm.environment.get(\"shippingFirmId\"));",
+							"console.log(jsonData.data.saleCode);",
+							"",
+							"postman.setNextRequest(null);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{sale-aggregation-pool}}/sale-aggregation/sale/{{sId}}/shipping?shippingFirmId={{shippingFirmId}}&userId={{sellerId}}\n",
+					"host": [
+						"{{sale-aggregation-pool}}"
+					],
+					"path": [
+						"sale-aggregation",
+						"sale",
+						"{{sId}}",
+						"shipping"
+					],
+					"query": [
+						{
+							"key": "shippingFirmId",
+							"value": "{{shippingFirmId}}"
+						},
+						{
+							"key": "userId",
+							"value": "{{sellerId}}\n"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getIntegrationType",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"var scCode = pm.environment.get(\"sc\");",
+							"pm.test(\"Integration Type test\" , function(){",
+							"  return  pm.expect(\"NON_INTEGRATED\").to.equal(jsonData.data.saleTransportDetails[scCode]);",
+							"});",
+							"postman.setNextRequest(null);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"saleCodes\": [\n        \"{{sc}}\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{accounting-aggregation-pool}}/accounting-aggregation/sale/logistics/transport-integration",
+					"host": [
+						"{{accounting-aggregation-pool}}"
+					],
+					"path": [
+						"accounting-aggregation",
+						"sale",
+						"logistics",
+						"transport-integration"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "sId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "sc",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "sellerId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "buyerId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "shippingFeePayer",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
